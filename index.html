@@ -16,22 +16,54 @@
 html{scroll-behavior:smooth}
 body{background:var(--crema);color:var(--texto);font-family:var(--fuente-c);font-size:16px;line-height:1.7;overflow-x:hidden}
 
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 2.5rem;display:flex;justify-content:space-between;align-items:center;background:rgba(245,240,232,0.93);backdrop-filter:blur(12px);border-bottom:0.5px solid rgba(27,94,69,0.1)}
-.nav-logo{font-family:var(--fuente-t);font-size:1.25rem;font-weight:400;color:var(--verde);letter-spacing:0.02em;text-decoration:none}
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:1000; /* alto para que quede siempre encima */
+  padding:1.2rem 2.5rem;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(245,240,232,0.93);backdrop-filter:blur(12px);
+  border-bottom:0.5px solid rgba(27,94,69,0.1)
+}
+.nav-logo{
+  font-family:var(--fuente-t);font-size:1.25rem;font-weight:400;
+  color:var(--verde);letter-spacing:0.02em;text-decoration:none;
+  position:relative;z-index:1002 /* siempre visible, por encima del menú abierto */
+}
 .nav-links{display:flex;gap:2rem;list-style:none}
-.nav-links a{text-decoration:none;color:var(--texto-suave);font-size:0.8rem;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.3s}
+.nav-links a{
+  text-decoration:none;color:var(--texto-suave);font-size:0.8rem;
+  font-weight:400;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.3s
+}
 .nav-links a:hover{color:var(--verde)}
-.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+
+/* Botón de tres líneas — oculto en escritorio */
+.nav-hamburger{
+  display:none;flex-direction:column;gap:5px;cursor:pointer;
+  padding:8px;background:none;border:none;
+  position:relative;z-index:1002 /* por encima del menú overlay */
+}
 .nav-hamburger span{display:block;width:24px;height:1.5px;background:var(--verde);transition:all 0.3s}
+/* Animación X al abrir */
 .nav-hamburger.abierto span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
 .nav-hamburger.abierto span:nth-child(2){opacity:0}
 .nav-hamburger.abierto span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+/* ── MENÚ EN MÓVIL ── */
 @media(max-width:900px){
   nav{padding:1rem 1.5rem}
   .nav-hamburger{display:flex}
-  .nav-links{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(245,240,232,0.98);flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;z-index:99}
+  .nav-links{
+    /* El menú ocupa toda la pantalla cuando está abierto */
+    display:none;
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(245,240,232,0.98);
+    flex-direction:column;align-items:center;justify-content:center;
+    gap:2.5rem;
+    z-index:1001 /* encima del fondo pero debajo del botón (1002) */
+  }
   .nav-links.abierto{display:flex}
-  .nav-links a{font-size:1.2rem;letter-spacing:0.1em}
+  .nav-links a{font-size:1.2rem;letter-spacing:0.1em;color:var(--verde)}
 }
 
 .etiqueta{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--terracota);margin-bottom:1.5rem;font-weight:500;display:block}
@@ -182,7 +214,6 @@ footer{background:var(--crema-oscura);padding:2.8rem 5rem;display:flex;justify-c
 .ft-ig a:hover{color:var(--verde)}
 
 @media(max-width:768px){
-  nav{padding:1rem 1.5rem}
   #inicio{grid-template-columns:1fr !important;padding:6rem 1.5rem 3rem !important;gap:3rem !important}
   #inicio > div:last-child{order:-1;display:flex;justify-content:center}
   .marco{max-width:260px}
@@ -207,9 +238,19 @@ footer{background:var(--crema-oscura);padding:2.8rem 5rem;display:flex;justify-c
     <li><a href="#contacto" onclick="cerrarMenu()">Sesiones</a></li>
   </ul>
 </nav>
+
 <script>
-function cerrarMenu(){document.getElementById('nav-links').classList.remove('abierto');document.getElementById('hamburger').classList.remove('abierto')}
-document.getElementById('hamburger').addEventListener('click',function(){this.classList.toggle('abierto');document.getElementById('nav-links').classList.toggle('abierto')});
+function cerrarMenu(){
+  document.getElementById('nav-links').classList.remove('abierto');
+  document.getElementById('hamburger').classList.remove('abierto');
+  document.body.style.overflow = ''; /* restaura el scroll de la página */
+}
+document.getElementById('hamburger').addEventListener('click', function(){
+  this.classList.toggle('abierto');
+  document.getElementById('nav-links').classList.toggle('abierto');
+  /* bloquea el scroll del fondo cuando el menú está abierto */
+  document.body.style.overflow = document.getElementById('nav-links').classList.contains('abierto') ? 'hidden' : '';
+});
 </script>
 
 <section style="min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:8rem 5rem 5rem;gap:5rem" id="inicio">
