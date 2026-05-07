@@ -21,6 +21,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 2.5rem;displa
 .nav-links{display:flex;gap:2rem;list-style:none}
 .nav-links a{text-decoration:none;color:var(--texto-suave);font-size:0.8rem;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.3s}
 .nav-links a:hover{color:var(--verde)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.nav-hamburger span{display:block;width:24px;height:1.5px;background:var(--verde);transition:all 0.3s}
+.nav-hamburger.abierto span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.abierto span:nth-child(2){opacity:0}
+.nav-hamburger.abierto span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  .nav-hamburger{display:flex}
+  .nav-links{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(245,240,232,0.98);flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;z-index:99}
+  .nav-links.abierto{display:flex}
+  .nav-links a{font-size:1.2rem;letter-spacing:0.1em}
+}
 
 .etiqueta{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--terracota);margin-bottom:1.5rem;font-weight:500;display:block}
 .hero-sub{font-size:1rem;color:var(--texto-suave);line-height:1.9;margin-bottom:2.5rem;font-weight:300;max-width:420px}
@@ -170,7 +182,7 @@ footer{background:var(--crema-oscura);padding:2.8rem 5rem;display:flex;justify-c
 .ft-ig a:hover{color:var(--verde)}
 
 @media(max-width:768px){
-  nav{padding:1rem 1.5rem}.nav-links{gap:1rem}
+  nav{padding:1rem 1.5rem}
   #inicio{grid-template-columns:1fr !important;padding:6rem 1.5rem 3rem !important;gap:3rem !important}
   #inicio > div:last-child{order:-1;display:flex;justify-content:center}
   .marco{max-width:260px}
@@ -185,13 +197,20 @@ footer{background:var(--crema-oscura);padding:2.8rem 5rem;display:flex;justify-c
 
 <nav>
   <a href="#inicio" class="nav-logo">Más Humano</a>
-  <ul class="nav-links">
-    <li><a href="#nosotros">Quiénes somos</a></li>
-    <li><a href="#herramientas">Herramientas</a></li>
-    <li><a href="#ensayos">Ensayos</a></li>
-    <li><a href="#contacto">Sesiones</a></li>
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#nosotros" onclick="cerrarMenu()">Quiénes somos</a></li>
+    <li><a href="#herramientas" onclick="cerrarMenu()">Herramientas</a></li>
+    <li><a href="#ensayos" onclick="cerrarMenu()">Ensayos</a></li>
+    <li><a href="#contacto" onclick="cerrarMenu()">Sesiones</a></li>
   </ul>
 </nav>
+<script>
+function cerrarMenu(){document.getElementById('nav-links').classList.remove('abierto');document.getElementById('hamburger').classList.remove('abierto')}
+document.getElementById('hamburger').addEventListener('click',function(){this.classList.toggle('abierto');document.getElementById('nav-links').classList.toggle('abierto')});
+</script>
 
 <section style="min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:8rem 5rem 5rem;gap:5rem" id="inicio">
   <div>
