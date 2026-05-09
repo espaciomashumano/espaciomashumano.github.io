@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Más Humano</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --verde:#1B5E45;--verde-medio:#2d5a3d;--verde-sage:#7FAF8C;
+  --terracota:#C07455;--crema:#F5F0E8;--crema-oscura:#EAE4D8;
+  --tierra:#8b7355;--texto:#2C2C2A;--texto-suave:#5F5E5A;--blanco:#fdfaf5;
+  --fuente-t:'Cormorant Garamond',Georgia,serif;--fuente-c:'DM Sans','Helvetica Neue',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--crema);color:var(--texto);font-family:var(--fuente-c);font-size:16px;line-height:1.7;overflow-x:hidden}
+
+nav{
+  position:fixed;top:0;left:0;right:0;
+  z-index:1000;
+  padding:1.2rem 2.5rem;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(245,240,232,0.93);backdrop-filter:blur(12px);
+  border-bottom:0.5px solid rgba(27,94,69,0.1)
+}
+.nav-logo{
+  font-family:var(--fuente-t);font-size:1.25rem;font-weight:400;
+  color:var(--verde);letter-spacing:0.02em;text-decoration:none;
+  position:relative;z-index:1002
+}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{
+  text-decoration:none;color:var(--texto-suave);font-size:0.8rem;
+  font-weight:400;letter-spacing:0.08em;text-transform:uppercase;transition:color 0.3s
+}
+.nav-links a:hover{color:var(--verde)}
+
+.nav-hamburger{
+  display:none;flex-direction:column;gap:5px;cursor:pointer;
+  padding:8px;background:none;border:none;
+  position:relative;z-index:1002
+}
+.nav-hamburger span{display:block;width:24px;height:1.5px;background:var(--verde);transition:all 0.3s}
+.nav-hamburger.abierto span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-hamburger.abierto span:nth-child(2){opacity:0}
+.nav-hamburger.abierto span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  .nav-hamburger{display:flex}
+  .nav-links{
+    display:none;
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(245,240,232,0.98);
+    flex-direction:column;align-items:center;justify-content:center;
+    gap:2.5rem;
+    z-index:1001
+  }
+  .nav-links.abierto{display:flex !important}
+  .nav-links{background:#F5F0E8 !important;width:100vw !important;height:100vh !important;top:0 !important;left:0 !important}
+  .nav-links a{font-size:1.3rem;letter-spacing:0.1em;color:#1B5E45 !important;font-weight:500}
+  .nav-links li{width:100%;text-align:center;list-style:none}
+}
+
+.etiqueta{font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--terracota);margin-bottom:1.5rem;font-weight:500;display:block}
+.hero-sub{font-size:1rem;color:var(--texto-suave);line-height:1.9;margin-bottom:2.5rem;font-weight:300;max-width:420px}
+.btn-p{display:inline-block;padding:0.9rem 2rem;background:var(--verde);color:var(--crema);text-decoration:none;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;transition:all 0.3s;border:1.5px solid var(--verde)}
+.btn-p:hover{background:transparent;color:var(--verde)}
+.btn-s{display:inline-block;padding:0.9rem 2rem;background:transparent;color:var(--verde);text-decoration:none;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:500;border:1.5px solid var(--verde);transition:all 0.3s;margin-left:1rem}
+.btn-s:hover{background:var(--verde);color:var(--crema)}
+.marco{width:100%;max-width:420px;aspect-ratio:3/4;background:var(--verde-medio);position:relative;overflow:hidden}
+.marco::after{content:'';position:absolute;top:1.5rem;left:1.5rem;right:-1.5rem;bottom:-1.5rem;border:1px solid var(--verde-sage);z-index:-1}
+.marco-interior{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:2.5rem;background:linear-gradient(180deg,transparent 40%,rgba(27,94,69,0.85) 100%)}
+.marco-deco{position:absolute;top:2rem;right:2rem;font-family:var(--fuente-t);font-size:10rem;font-weight:300;color:rgba(245,240,232,0.06);line-height:1}
+.marco-tagline{font-family:var(--fuente-t);font-size:1.4rem;font-weight:300;font-style:italic;color:rgba(245,240,232,0.9);line-height:1.4;margin-bottom:0.8rem}
+.marco-marca{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--verde-sage)}
+
+.nosotros{background:var(--verde);color:var(--crema);display:grid;grid-template-columns:1fr 1fr;gap:5rem;padding:7rem 5rem;align-items:center}
+.nosotros-cita{font-family:var(--fuente-t);font-size:clamp(1.7rem,2.8vw,2.4rem);font-weight:300;line-height:1.35;font-style:italic;border-left:2px solid var(--terracota);padding-left:2rem}
+.nosotros-cita span{color:var(--verde-sage)}
+.nosotros-texto h2{font-family:var(--fuente-t);font-size:1.1rem;font-weight:400;margin-bottom:1.2rem;color:var(--verde-sage);letter-spacing:0.08em;text-transform:uppercase}
+.nosotros-texto p{font-size:0.93rem;line-height:1.95;color:rgba(245,240,232,0.78);margin-bottom:1rem;font-weight:300}
+.chips{display:flex;gap:0.8rem;margin-top:2rem;flex-wrap:wrap}
+.chip{padding:0.35rem 1rem;border:0.5px solid rgba(127,175,140,0.35);color:var(--verde-sage);font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase}
+
+.herramientas{background:var(--crema);padding:7rem 5rem}
+.sec-titulo{text-align:center;margin-bottom:5rem}
+.sec-titulo h2{font-family:var(--fuente-t);font-size:clamp(2rem,3.8vw,3rem);font-weight:300;color:var(--verde);line-height:1.2;margin-top:1rem}
+.grid-herr{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem}
+.tarjeta{background:white;border:0.5px solid rgba(27,94,69,0.1);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:all 0.4s;cursor:pointer}
+.tarjeta::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--verde);transform:scaleX(0);transform-origin:left;transition:transform 0.4s}
+.tarjeta:hover{border-color:rgba(27,94,69,0.3);transform:translateY(-4px);box-shadow:0 12px 40px rgba(27,94,69,0.08)}
+.tarjeta:hover::after{transform:scaleX(1)}
+.tarjeta-n{font-family:var(--fuente-t);font-size:5rem;font-weight:300;color:rgba(27,94,69,0.06);position:absolute;top:0.5rem;right:1rem;line-height:1}
+.tarjeta-badge{display:inline-block;font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.25rem 0.7rem;margin-bottom:1.2rem}
+.badge-activo{background:rgba(27,94,69,0.08);color:var(--verde)}
+.badge-pronto{background:var(--crema-oscura);color:var(--texto-suave)}
+.tarjeta-nombre{font-family:var(--fuente-t);font-size:1.8rem;font-weight:400;color:var(--verde);margin-bottom:0.6rem;letter-spacing:0.02em}
+.tarjeta-desc{font-size:0.87rem;color:var(--texto-suave);line-height:1.75;margin-bottom:1.5rem;font-weight:300}
+.tarjeta-tipo{font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--terracota);font-weight:500}
+.tarjeta-dim{opacity:0.5;cursor:default}
+.tarjeta-dim:hover{transform:none;box-shadow:none;border-color:rgba(27,94,69,0.1)}
+.tarjeta-dim::after{display:none}
+
+/* ── MODAL AVANI ── */
+.modal{display:none;position:fixed;inset:0;z-index:200;overflow-y:auto}
+.modal.abierto{display:block}
+.screen-avani{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:5rem 2rem 4rem;background:var(--crema);position:relative;animation:fadeUp 0.7s ease forwards}
+.screen-avani.activa{display:flex}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.modal-logo{position:absolute;top:1.6rem;left:50%;transform:translateX(-50%);font-family:var(--fuente-t);font-size:1rem;color:var(--verde);opacity:0.5;white-space:nowrap;font-weight:300;letter-spacing:0.05em}
+.modal-cerrar{position:fixed;top:1.4rem;right:1.5rem;background:none;border:0.5px solid rgba(27,94,69,0.2);color:var(--texto-suave);width:38px;height:38px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s;z-index:210;border-radius:50%}
+.modal-cerrar:hover{background:var(--verde);color:var(--crema)}
+.progreso-avani{position:fixed;bottom:1.8rem;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:210}
+.pt{width:6px;height:6px;border-radius:50%;background:var(--crema-oscura);transition:all 0.3s}
+.pt.activo{background:var(--verde);width:18px;border-radius:3px}
+
+.av-bienvenida{text-align:center;max-width:340px}
+.av-pulso{width:72px;height:72px;border-radius:50%;background:var(--verde);margin:0 auto 2.5rem;animation:pulso 4s ease-in-out infinite}
+@keyframes pulso{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(27,94,69,0.25)}50%{transform:scale(1.1);box-shadow:0 0 0 18px rgba(27,94,69,0)}}
+.av-h1{font-family:var(--fuente-t);font-size:2.1rem;font-weight:300;color:var(--verde);line-height:1.3;margin-bottom:1rem}
+.av-h1 em{font-style:italic;font-weight:400}
+.av-sub{font-size:0.93rem;color:var(--tierra);line-height:1.75;margin-bottom:2.5rem;font-weight:300}
+.av-nombre{font-size:0.7rem;letter-spacing:0.16em;text-transform:uppercase;color:rgba(27,94,69,0.35);margin-bottom:1rem;font-weight:400}
+.btn-av{background:var(--verde);color:var(--blanco);border:none;padding:0.95rem 2.5rem;border-radius:50px;font-family:var(--fuente-c);font-size:0.88rem;font-weight:400;letter-spacing:0.05em;cursor:pointer;transition:all 0.3s;display:inline-block;-webkit-tap-highlight-color:transparent}
+.btn-av:hover{background:var(--verde-medio);transform:translateY(-2px)}
+.btn-av-s{background:transparent;color:var(--verde);border:1.5px solid var(--verde);padding:0.85rem 2rem;border-radius:50px;font-family:var(--fuente-c);font-size:0.85rem;cursor:pointer;transition:all 0.3s;-webkit-tap-highlight-color:transparent}
+.btn-av-s:hover{background:var(--verde);color:var(--blanco)}
+
+.av-resp{text-align:center;max-width:360px}
+.txt-resp{font-family:var(--fuente-t);font-size:1.55rem;font-weight:300;color:var(--verde);margin-bottom:0.5rem;min-height:2.5rem}
+.circulo-av{width:155px;height:155px;border-radius:50%;background:var(--verde-medio);margin:0 auto 2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent}
+.circulo-av::before{content:'';position:absolute;inset:-12px;border-radius:50%;border:1.5px solid rgba(27,94,69,0.18);animation:anillo 4s ease-in-out infinite}
+@keyframes anillo{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.08);opacity:1}}
+.circulo-av.expand{animation:expandir 4s ease-in-out forwards}
+.circulo-av.contrae{animation:contraer 6s ease-in-out forwards}
+@keyframes expandir{0%{transform:scale(1)}100%{transform:scale(1.32)}}
+@keyframes contraer{0%{transform:scale(1.32)}100%{transform:scale(1)}}
+.cont-num{font-family:var(--fuente-t);font-size:2.3rem;color:var(--blanco);font-weight:300}
+.ciclos-av{font-size:0.83rem;color:var(--tierra);margin-bottom:2rem}
+
+.av-anclaje{max-width:400px;width:100%}
+.av-h2{font-family:var(--fuente-t);font-size:1.75rem;font-weight:300;color:var(--verde);margin-bottom:0.5rem;text-align:center}
+.av-desc{font-size:0.86rem;color:var(--tierra);text-align:center;margin-bottom:2rem;line-height:1.65}
+.sentidos{list-style:none;width:100%}
+.s-item{background:var(--blanco);border:1px solid var(--crema-oscura);border-radius:16px;padding:1.15rem 1.4rem;margin-bottom:0.75rem;cursor:pointer;transition:all 0.3s;display:flex;align-items:flex-start;gap:1rem;-webkit-tap-highlight-color:transparent}
+.s-item:hover{border-color:var(--verde-sage);background:var(--crema)}
+.s-item.ok{border-color:var(--verde);background:rgba(27,94,69,0.04)}
+.s-num{font-family:var(--fuente-t);font-size:1.5rem;color:var(--verde);font-weight:300;min-width:2rem;line-height:1}
+.s-cont h3{font-size:0.88rem;font-weight:400;color:var(--texto);margin-bottom:0.2rem}
+.s-cont p{font-size:0.8rem;color:var(--tierra);line-height:1.5}
+.s-check{margin-left:auto;color:var(--verde);font-size:1.1rem;opacity:0;transition:opacity 0.3s;align-self:center}
+.s-item.ok .s-check{opacity:1}
+
+.av-frase{text-align:center;max-width:340px}
+.av-ornamento{font-family:var(--fuente-t);font-size:3rem;color:var(--verde);opacity:0.25;line-height:1;margin-bottom:1.5rem}
+.av-frase-grande{font-family:var(--fuente-t);font-size:1.65rem;font-weight:300;font-style:italic;color:var(--verde);line-height:1.5;margin-bottom:1.5rem}
+.av-frase-txt{font-size:0.87rem;color:var(--tierra);line-height:1.85;margin-bottom:2.5rem}
+
+.av-cierre{text-align:center;max-width:340px}
+.av-final{font-family:var(--fuente-t);font-size:1.55rem;font-weight:300;color:var(--verde);line-height:1.45;margin-bottom:1.2rem}
+.av-submsg{font-size:0.87rem;color:var(--tierra);line-height:1.85;margin-bottom:2rem}
+.av-autoria{background:var(--verde-medio);border-radius:18px;padding:1.5rem 2rem;margin:1.5rem 0;text-align:center}
+.av-marca-grande{font-family:var(--fuente-t);font-size:1.2rem;font-weight:300;color:var(--blanco);margin-bottom:0.8rem;letter-spacing:0.03em}
+.av-sep{width:28px;height:0.5px;background:rgba(253,250,245,0.2);margin:0 auto 0.8rem}
+.av-credit-label{font-size:0.68rem;color:rgba(253,250,245,0.5);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem}
+.av-credit-nombre{font-family:var(--fuente-t);font-size:0.95rem;font-weight:300;font-style:italic;color:var(--blanco)}
+.av-credit-para{font-size:0.68rem;color:rgba(253,250,245,0.5);letter-spacing:0.08em;text-transform:uppercase;margin-top:0.2rem}
+.compartir-bloque{margin-top:2rem;padding-top:1.5rem;border-top:0.5px solid rgba(27,94,69,0.12)}
+.compartir-bloque p{font-size:0.78rem;color:var(--texto-suave);margin-bottom:0.8rem;letter-spacing:0.04em}
+.compartir-links{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap}
+.comp-link{font-size:0.75rem;color:var(--verde);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;border-bottom:0.5px solid var(--verde);padding-bottom:1px;transition:opacity 0.3s}
+.comp-link:hover{opacity:0.65}
+
+/* ── MODAL LÚMINA ── */
+.modal-lumina{display:none;position:fixed;inset:0;z-index:300;overflow-y:auto;background:#0f2d1e}
+.modal-lumina.abierto{display:block}
+.lm-cerrar{position:fixed;top:1.4rem;right:1.5rem;background:none;border:0.5px solid rgba(245,240,232,0.2);color:rgba(245,240,232,0.6);width:38px;height:38px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.3s;z-index:310;border-radius:50%}
+.lm-cerrar:hover{background:rgba(245,240,232,0.1);color:rgba(245,240,232,0.9)}
+
+/* estilos internos de Lúmina con prefijo lm- para evitar colisiones */
+.lm-app{min-height:100vh;display:flex;flex-direction:column;font-family:'DM Sans',sans-serif;color:#F5F0E8}
+.lm-screen{display:none;min-height:100vh;flex-direction:column;animation:lmFadeIn 0.7s ease forwards}
+.lm-screen.active{display:flex}
+@keyframes lmFadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes lmFadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes lmSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+.lm-logo-bar{padding:24px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,240,232,0.1)}
+.lm-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#F5F0E8;letter-spacing:0.02em}
+.lm-logo span{color:#7FAF8C}
+.lm-progress-bar{display:flex;gap:6px;align-items:center}
+.lm-dot{width:6px;height:6px;border-radius:50%;background:rgba(245,240,232,0.2);transition:background 0.4s,transform 0.3s}
+.lm-dot.done{background:#7FAF8C}
+.lm-dot.current{background:#C07455;transform:scale(1.4)}
+
+.lm-content{flex:1;display:flex;flex-direction:column;padding:40px 32px;max-width:680px;margin:0 auto;width:100%}
+.lm-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:#C07455;margin-bottom:16px;animation:lmFadeUp 0.6s ease 0.1s both}
+.lm-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,7vw,56px);font-weight:300;line-height:1.1;color:#F5F0E8;margin-bottom:24px;animation:lmFadeUp 0.6s ease 0.2s both}
+.lm-h1 em{font-style:italic;color:#7FAF8C}
+.lm-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,5vw,42px);font-weight:400;line-height:1.2;color:#F5F0E8;margin-bottom:20px;animation:lmFadeUp 0.6s ease 0.1s both}
+.lm-h2 em{font-style:italic;color:#7FAF8C}
+.lm-lead{font-size:17px;line-height:1.75;color:rgba(245,240,232,0.65);margin-bottom:20px;font-weight:300;animation:lmFadeUp 0.6s ease 0.3s both}
+.lm-body{font-size:15px;line-height:1.8;color:rgba(245,240,232,0.65);margin-bottom:16px;font-weight:300}
+.lm-divider{width:48px;height:1px;background:#C07455;margin:24px 0;animation:lmLineGrow 0.8s ease 0.4s both}
+@keyframes lmLineGrow{from{width:0}to{width:48px}}
+.lm-spacer{flex:1}
+
+.lm-btn-primary{display:inline-flex;align-items:center;gap:10px;background:#1B5E45;color:#F5F0E8;border:none;border-radius:2px;padding:16px 32px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.05em;cursor:pointer;transition:background 0.3s,transform 0.2s;margin-top:8px;animation:lmFadeUp 0.6s ease 0.5s both}
+.lm-btn-primary:hover{background:#2d7a5c;transform:translateY(-1px)}
+.lm-btn-primary svg{transition:transform 0.3s}
+.lm-btn-primary:hover svg{transform:translateX(4px)}
+
+.lm-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.04);border:1px solid rgba(245,240,232,0.1);border-radius:20px;padding:6px 14px;font-size:12px;color:rgba(245,240,232,0.35);margin-bottom:32px;animation:lmFadeUp 0.6s ease 0.6s both}
+.lm-highlight{color:#7FAF8C;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1em}
+
+.lm-loop-visual{position:relative;width:200px;height:200px;margin:32px auto;animation:lmFadeUp 0.6s ease 0.4s both}
+.lm-ring{position:absolute;border-radius:50%;border:1px solid;top:50%;left:50%;transform:translate(-50%,-50%)}
+.lm-ring-1{width:180px;height:180px;border-color:rgba(27,94,69,0.4);border-top-color:#7FAF8C;animation:lmSpin 8s linear infinite}
+.lm-ring-2{width:140px;height:140px;border-color:rgba(192,116,85,0.25);border-right-color:#C07455;animation:lmSpin 5s linear infinite reverse}
+.lm-ring-3{width:100px;height:100px;border-color:rgba(245,240,232,0.1);border-bottom-color:rgba(245,240,232,0.35);animation:lmSpin 12s linear infinite}
+.lm-ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:80px;font-family:'Cormorant Garamond',serif;font-size:13px;font-style:italic;color:rgba(245,240,232,0.65);line-height:1.4}
+
+.lm-progress-line{height:2px;background:rgba(245,240,232,0.1);border-radius:1px;margin-bottom:32px;overflow:hidden}
+.lm-progress-fill{height:100%;background:#7FAF8C;border-radius:1px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+
+.lm-step{display:flex;align-items:center;gap:12px;margin-bottom:28px;animation:lmFadeUp 0.5s ease 0.1s both}
+.lm-step-num{width:36px;height:36px;border-radius:50%;border:1px solid #7FAF8C;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:18px;color:#7FAF8C;flex-shrink:0}
+.lm-step-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#7FAF8C;font-weight:500}
+
+.lm-badge{display:inline-block;background:rgba(192,116,85,0.15);border:1px solid rgba(192,116,85,0.3);color:#d4906f;font-size:11px;letter-spacing:0.08em;padding:3px 10px;border-radius:2px;font-weight:500;text-transform:uppercase;margin-bottom:20px}
+
+.lm-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;animation:lmFadeUp 0.6s ease 0.35s both}
+.lm-stat-box{background:rgba(255,255,255,0.03);border:1px solid rgba(245,240,232,0.1);border-radius:4px;padding:18px}
+.lm-stat-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:#7FAF8C;line-height:1;margin-bottom:4px}
+.lm-stat-desc{font-size:12px;color:rgba(245,240,232,0.65);line-height:1.5;font-weight:300}
+
+.lm-quote{border-left:2px solid #C07455;padding:16px 20px;margin:24px 0}
+.lm-quote-text{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;font-style:italic;line-height:1.5;color:#F5F0E8}
+.lm-quote-attr{font-size:12px;color:rgba(245,240,232,0.35);margin-top:8px;letter-spacing:0.05em}
+
+.lm-thoughts{display:flex;flex-direction:column;gap:10px;margin:24px 0}
+.lm-thought{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border:1px solid rgba(245,240,232,0.1);border-radius:4px;background:rgba(255,255,255,0.02);cursor:pointer;transition:all 0.3s}
+.lm-thought:hover{border-color:#7FAF8C;background:rgba(127,175,140,0.06)}
+.lm-thought.selected{border-color:#C07455;background:rgba(192,116,85,0.08)}
+.lm-thought-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid rgba(245,240,232,0.2);margin-top:4px;flex-shrink:0;transition:all 0.3s}
+.lm-thought.selected .lm-thought-dot{background:#C07455;border-color:#C07455}
+.lm-thought-label{font-size:14px;color:rgba(245,240,232,0.65);line-height:1.6;font-weight:300}
+.lm-thought.selected .lm-thought-label{color:#F5F0E8}
+.lm-validation{font-size:13px;color:#C07455;margin-top:-6px;margin-bottom:12px;display:none}
+.lm-validation.show{display:block}
+
+.lm-technique-box{background:rgba(27,94,69,0.12);border:1px solid rgba(27,94,69,0.4);border-radius:4px;padding:24px;margin:20px 0}
+.lm-technique-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#7FAF8C;margin-bottom:10px}
+.lm-technique-text{font-size:14px;line-height:1.8;color:rgba(245,240,232,0.65);font-weight:300}
+
+.lm-transform{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.lm-transform-row{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;animation:lmFadeUp 0.5s ease both}
+.lm-transform-row:nth-child(1){animation-delay:0.1s}
+.lm-transform-row:nth-child(2){animation-delay:0.2s}
+.lm-transform-row:nth-child(3){animation-delay:0.3s}
+.lm-before{background:rgba(192,116,85,0.08);border:1px solid rgba(192,116,85,0.2);border-radius:4px;padding:12px 16px;font-size:13px;color:rgba(192,116,85,0.9);line-height:1.5;font-style:italic}
+.lm-arrow{color:rgba(245,240,232,0.35);font-size:16px;text-align:center;flex-shrink:0}
+.lm-after{background:rgba(27,94,69,0.1);border:1px solid rgba(127,175,140,0.2);border-radius:4px;padding:12px 16px;font-size:13px;color:#7FAF8C;line-height:1.5}
+
+.lm-obs-hint{font-size:11px;color:rgba(245,240,232,0.35);text-align:right;margin-top:-8px;margin-bottom:12px;letter-spacing:0.05em}
+.lm-obs-list{display:flex;flex-direction:column;gap:16px;margin:20px 0}
+.lm-obs-card{border:1px solid rgba(245,240,232,0.1);border-radius:4px;padding:20px;cursor:pointer;transition:all 0.35s;position:relative;overflow:hidden}
+.lm-obs-card::before{content:'';position:absolute;left:0;top:0;height:100%;width:3px;background:#7FAF8C;transform:scaleY(0);transition:transform 0.35s;transform-origin:bottom}
+.lm-obs-card:hover::before,.lm-obs-card.revealed::before{transform:scaleY(1)}
+.lm-obs-card.revealed{border-color:rgba(127,175,140,0.4);background:rgba(27,94,69,0.08)}
+.lm-obs-q{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:400;color:#F5F0E8;line-height:1.4;margin-bottom:0;transition:margin-bottom 0.3s}
+.lm-obs-card.revealed .lm-obs-q{margin-bottom:12px}
+.lm-obs-a{font-size:14px;color:#7FAF8C;line-height:1.75;font-weight:300;max-height:0;overflow:hidden;transition:max-height 0.5s,opacity 0.4s;opacity:0}
+.lm-obs-card.revealed .lm-obs-a{max-height:200px;opacity:1}
+
+.lm-field-group{margin-bottom:20px}
+.lm-field-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(245,240,232,0.35);margin-bottom:8px;font-weight:500}
+.lm-textarea{width:100%;background:rgba(255,255,255,0.03);border:1px solid rgba(245,240,232,0.1);border-radius:4px;padding:16px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:300;color:#F5F0E8;line-height:1.7;resize:none;min-height:100px;transition:border-color 0.3s;margin-bottom:12px}
+.lm-textarea:focus{outline:none;border-color:#7FAF8C}
+.lm-textarea::placeholder{color:rgba(245,240,232,0.35)}
+
+.lm-check-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin:20px 0}
+.lm-check-list li{display:flex;align-items:flex-start;gap:12px;font-size:14px;color:rgba(245,240,232,0.65);line-height:1.6;font-weight:300}
+.lm-check-icon{width:18px;height:18px;flex-shrink:0;margin-top:1px}
+
+.lm-cierre-card{background:rgba(27,94,69,0.2);border:1px solid rgba(127,175,140,0.3);border-radius:4px;padding:36px 32px;text-align:center;margin:24px 0}
+.lm-cierre-icon{width:56px;height:56px;margin:0 auto 20px;border-radius:50%;border:1px solid rgba(127,175,140,0.4);display:flex;align-items:center;justify-content:center}
+.lm-cierre-icon svg{width:24px;height:24px;stroke:#7FAF8C;fill:none;stroke-width:1.5}
+.lm-cierre-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:#F5F0E8;margin-bottom:12px}
+.lm-cierre-text{font-size:15px;color:rgba(245,240,232,0.65);line-height:1.8;font-weight:300;max-width:480px;margin:0 auto 24px}
+.lm-btn-cta{display:inline-flex;align-items:center;gap:10px;background:#C07455;color:#F5F0E8;border:none;border-radius:2px;padding:16px 36px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.05em;cursor:pointer;transition:background 0.3s,transform 0.2s;text-decoration:none;margin-top:8px}
+.lm-btn-cta:hover{background:#d4906f;transform:translateY(-1px)}
+
+.lm-bottom-nav{padding:24px 32px;border-top:1px solid rgba(245,240,232,0.1);display:flex;align-items:center;justify-content:space-between}
+.lm-nav-back{background:transparent;border:none;color:rgba(245,240,232,0.35);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:color 0.3s;display:flex;align-items:center;gap:8px}
+.lm-nav-back:hover{color:rgba(245,240,232,0.65)}
+.lm-nav-continue{background:#1B5E45;color:#F5F0E8;border:none;border-radius:2px;padding:14px 28px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;letter-spacing:0.05em;cursor:pointer;transition:background 0.3s,transform 0.2s;display:flex;align-items:center;gap:10px}
+.lm-nav-continue:hover{background:#2d7a5c;transform:translateY(-1px)}
+
+.lm-firma{text-align:center;padding:32px;border-top:1px solid rgba(245,240,232,0.1);font-size:12px;color:rgba(245,240,232,0.35);letter-spacing:0.05em}
+.lm-firma strong{color:#7FAF8C;font-weight:500}
+
+@media(max-width:480px){
+  .lm-content{padding:28px 20px}
+  .lm-logo-bar{padding:20px}
+  .lm-bottom-nav{padding:20px}
+  .lm-transform-row{grid-template-columns:1fr}
+  .lm-arrow{display:none}
+  .lm-stat-row{grid-template-columns:1fr}
+}
+
+.ensayos{background:var(--crema-oscura);padding:7rem 5rem}
+.ensayos-grid{display:grid;grid-template-columns:1fr 2fr;gap:5rem;align-items:start}
+.ensayos-intro h2{font-family:var(--fuente-t);font-size:clamp(1.8rem,3vw,2.6rem);font-weight:300;color:var(--verde);line-height:1.25;margin-bottom:1rem}
+.ensayos-intro p{font-size:0.9rem;color:var(--texto-suave);line-height:1.85;font-weight:300}
+.libro-card{background:var(--verde);padding:2.5rem;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.libro-card::before{content:'"';font-family:var(--fuente-t);font-size:11rem;position:absolute;top:-2.5rem;right:0.5rem;color:rgba(245,240,232,0.04);line-height:1}
+.lb-badge{display:inline-block;background:var(--terracota);color:var(--crema);font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;padding:0.28rem 0.75rem;margin-bottom:1.2rem}
+.libro-card h3{font-family:var(--fuente-t);font-size:1.6rem;font-weight:400;color:var(--crema);margin-bottom:0.8rem;line-height:1.25}
+.libro-card p{font-size:0.87rem;color:rgba(245,240,232,0.65);line-height:1.85;margin-bottom:1.5rem;font-weight:300}
+.libro-card a{color:var(--verde-sage);font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-bottom:0.5px solid var(--verde-sage);padding-bottom:2px}
+.ensayo-item{padding:1.4rem 0;border-bottom:0.5px solid rgba(27,94,69,0.1);display:grid;grid-template-columns:auto 1fr auto;gap:1.5rem;align-items:start}
+.ens-fecha{font-size:0.73rem;color:var(--texto-suave);letter-spacing:0.08em;text-transform:uppercase;font-weight:300;padding-top:4px;white-space:nowrap}
+.ensayo-item h4{font-family:var(--fuente-t);font-size:1.2rem;font-weight:400;color:var(--verde);margin-bottom:0.3rem;line-height:1.25}
+.ensayo-item p{font-size:0.83rem;color:var(--texto-suave);line-height:1.65;font-weight:300}
+.ens-arrow{color:var(--terracota);font-size:1.1rem;padding-top:4px}
+
+.contacto{background:var(--verde);padding:7rem 5rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.contacto-txt h2{font-family:var(--fuente-t);font-size:clamp(2rem,3.8vw,3rem);font-weight:300;color:var(--crema);line-height:1.2;margin-bottom:1.2rem}
+.contacto-txt p{font-size:0.93rem;color:rgba(245,240,232,0.68);line-height:1.95;font-weight:300;margin-bottom:2rem}
+.info-bloque{display:flex;flex-direction:column;gap:1rem}
+.info-l{display:flex;align-items:flex-start;gap:1rem;font-size:0.88rem;color:rgba(245,240,232,0.75)}
+.info-l svg{width:17px;height:17px;stroke:var(--verde-sage);stroke-width:1.5;fill:none;flex-shrink:0;margin-top:3px}
+.info-l strong{color:var(--crema);display:block;font-weight:500;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.2rem}
+.btns-contacto{display:flex;flex-direction:column;gap:1rem}
+.btn-c{display:flex;align-items:center;gap:1rem;padding:1.15rem 1.7rem;border:0.5px solid rgba(245,240,232,0.18);color:var(--crema);text-decoration:none;font-size:0.87rem;transition:all 0.3s;background:transparent}
+.btn-c:hover{background:rgba(245,240,232,0.07);border-color:rgba(245,240,232,0.35)}
+.btn-c-p{background:var(--terracota);border-color:var(--terracota)}
+.btn-c-p:hover{opacity:0.88;background:var(--terracota)}
+.btn-c svg{width:21px;height:21px;fill:currentColor;flex-shrink:0}
+.btn-c-txt strong{display:block;font-weight:500;font-size:0.84rem}
+.btn-c-txt span{font-size:0.76rem;opacity:0.65;letter-spacing:0.04em}
+
+footer{background:var(--crema-oscura);padding:2.8rem 5rem;display:flex;justify-content:space-between;align-items:center;border-top:0.5px solid rgba(27,94,69,0.1)}
+.ft-logo{font-family:var(--fuente-t);font-size:1.05rem;color:var(--verde);font-weight:400}
+.ft-firma{font-size:0.76rem;color:var(--texto-suave);letter-spacing:0.06em}
+.ft-ig a{font-size:0.76rem;color:var(--texto-suave);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;transition:color 0.3s}
+.ft-ig a:hover{color:var(--verde)}
+
+@media(max-width:768px){
+  #inicio{grid-template-columns:1fr !important;padding:6rem 1.5rem 3rem !important;gap:3rem !important}
+  #inicio > div:last-child{order:-1;display:flex;justify-content:center}
+  .marco{max-width:260px}
+  .nosotros,.ensayos-grid,.contacto{grid-template-columns:1fr;gap:3rem;padding:5rem 1.5rem}
+  .herramientas,.ensayos{padding:5rem 1.5rem}
+  footer{flex-direction:column;gap:1rem;text-align:center;padding:2rem 1.5rem}
+  .av-anclaje{max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#inicio" class="nav-logo">Más Humano</a>
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#nosotros" onclick="cerrarMenu()">Quiénes somos</a></li>
+    <li><a href="#herramientas" onclick="cerrarMenu()">Herramientas</a></li>
+    <li><a href="#ensayos" onclick="cerrarMenu()">Ensayos</a></li>
+    <li><a href="#contacto" onclick="cerrarMenu()">Sesiones</a></li>
+  </ul>
+</nav>
+
+<script>
+function cerrarMenu(){
+  document.getElementById('nav-links').classList.remove('abierto');
+  document.getElementById('hamburger').classList.remove('abierto');
+  document.body.style.overflow='';
+}
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('abierto');
+  document.getElementById('nav-links').classList.toggle('abierto');
+  document.body.style.overflow=document.getElementById('nav-links').classList.contains('abierto')?'hidden':'';
+});
+</script>
+
+<section style="min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:8rem 5rem 5rem;gap:5rem" id="inicio">
+  <div>
+    <span class="etiqueta">Acompañamiento virtual</span>
+    <h1 style="font-family:var(--fuente-t);font-size:clamp(2.6rem,4.5vw,3.8rem);font-weight:300;line-height:1.15;color:var(--verde);margin-bottom:1.5rem">Algo en ti sabe que <em style="font-style:italic;color:var(--terracota)">puede ser mejor.</em></h1>
+    <p class="hero-sub">Ser Más Humano no es un destino. Es el camino que se elige cuando decidimos mirar con honestidad lo que nos pesa y lo que nos mueve.</p>
+    <a href="#herramientas" class="btn-p">Explorar herramientas</a>
+    <a href="#contacto" class="btn-s">Sesiones</a>
+  </div>
+  <div style="display:flex;justify-content:center;align-items:center">
+    <div class="marco">
+      <div class="marco-deco">+</div>
+      <div class="marco-interior">
+        <p class="marco-tagline">"Vivir es más que sobrevivir lo que sentimos."</p>
+        <span class="marco-marca">Más Humano · @espaciomashumano</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="nosotros" id="nosotros">
+  <div class="nosotros-cita">
+    "No acompañamos personas <span>rotas.</span> Acompañamos personas que ya están listas."
+  </div>
+  <div class="nosotros-texto">
+    <h2>Quiénes somos</h2>
+    <p>En Más Humano creemos que las demandas de la vida, las exigencias propias y las de los demás, pueden dejar malestares que merecen atención real. No diagnosticamos. Acompañamos.</p>
+    <p>Trabajamos principalmente con mujeres latinoamericanas de 25 a 50 años, incluyendo latinas en Estados Unidos, a través de sesiones virtuales por Google Meet, de lunes a viernes de 7 am a 10 pm hora Perú.</p>
+    <p>Desde Lima, con presencia en cualquier parte del mundo donde haya una persona que quiera crecer.</p>
+    <div class="chips">
+      <span class="chip">Virtual</span>
+      <span class="chip">Enfoque ACT</span>
+      <span class="chip">Google Meet</span>
+      <span class="chip">Lima, Perú</span>
+    </div>
+  </div>
+</section>
+
+<section class="herramientas" id="herramientas">
+  <div class="sec-titulo">
+    <span class="etiqueta">Recursos gratuitos</span>
+    <h2>Herramientas para ti</h2>
+  </div>
+  <div class="grid-herr">
+    <div class="tarjeta" onclick="abrirAvani()">
+      <span class="tarjeta-n">01</span>
+      <div class="tarjeta-badge badge-activo">Disponible ahora</div>
+      <div class="tarjeta-nombre">Avani</div>
+      <p class="tarjeta-desc">Avani significa tierra en sánscrito. Cuando la ansiedad llega, esta herramienta te devuelve a ella: a tu cuerpo, a tu presente, a lo que es real ahora mismo.</p>
+      <span class="tarjeta-tipo">Respiración + Anclaje ACT</span>
+    </div>
+    <div class="tarjeta" onclick="abrirLumina()">
+      <span class="tarjeta-n">02</span>
+      <div class="tarjeta-badge badge-activo">Disponible ahora</div>
+      <div class="tarjeta-nombre">Lúmina</div>
+      <p class="tarjeta-desc">Cuando la mente no para. Una herramienta para interrumpir la rumiación y aprender a relacionarte con tus pensamientos desde otro lugar.</p>
+      <span class="tarjeta-tipo">Defusión cognitiva · ACT</span>
+    </div>
+    <div class="tarjeta tarjeta-dim">
+      <span class="tarjeta-n">03</span>
+      <div class="tarjeta-badge badge-pronto">Próximamente</div>
+      <div class="tarjeta-nombre">Raíz</div>
+      <p class="tarjeta-desc">Un ejercicio de valores y autoconocimiento para saber por qué actúas como actúas, y hacia dónde quieres ir.</p>
+      <span class="tarjeta-tipo">Valores · ACT</span>
+    </div>
+  </div>
+</section>
+
+<section class="ensayos" id="ensayos">
+  <div class="ensayos-grid">
+    <div class="ensayos-intro">
+      <span class="etiqueta" style="display:block;margin-bottom:1rem">Escritura y pensamiento</span>
+      <h2>Lo que pensamos, escrito.</h2>
+      <p>Aquí depositamos lo que aprendemos, lo que cuestionamos y lo que creemos que vale la pena decir. Sin lenguaje técnico. Con honestidad.</p>
+    </div>
+    <div>
+      <div class="libro-card" style="padding:0;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1fr 1fr">
+          <img src="ChatGPT Image 8 may 2026, 09_25_33 p.m..png" alt="Portada La trampa del máximo esfuerzo" style="width:100%;height:100%;object-fit:cover;display:block">
+          <img src="ChatGPT Image 9 may 2026, 09_38_09 a.m..png" alt="Contraportada La trampa del máximo esfuerzo" style="width:100%;height:100%;object-fit:cover;display:block;border-left:0.5px solid rgba(245,240,232,0.1)">
+        </div>
+        <div style="padding:2rem 2.5rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap">
+          <div>
+            <span class="lb-badge" style="margin-bottom:0.5rem">Libro · Descarga gratuita</span>
+            <h3 style="margin-bottom:0.3rem"><em>La trampa del máximo esfuerzo</em></h3>
+            <p style="margin:0">Roosvelt Cabrejos · Más Humano</p>
+          </div>
+          <a href="La trampa del maximo esfuerzo-Roosvelt Cabrejos.pdf" download style="color:var(--verde-sage);font-size:0.78rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-bottom:0.5px solid var(--verde-sage);padding-bottom:2px;white-space:nowrap">Descargar libro →</a>
+        </div>
+      </div>
+      <div class="ensayo-item">
+        <span class="ens-fecha">Pronto</span>
+        <div>
+          <h4>El primer ensayo está en camino</h4>
+          <p>Este espacio es para las palabras que merecen ser dichas. Vuelve pronto.</p>
+        </div>
+        <span class="ens-arrow">→</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contacto" id="contacto">
+  <div class="contacto-txt">
+    <h2>Hablemos.</h2>
+    <p>Puedes escribirnos desde cualquier parte del mundo. Las sesiones son virtuales, por Google Meet, de lunes a viernes de 7 am a 10 pm hora Perú.</p>
+    <div class="info-bloque">
+      <div class="info-l">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <div><strong>Horario</strong>Lun. a Vie. · 7:00 am a 10:00 pm hora Perú</div>
+      </div>
+      <div class="info-l">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <div><strong>Modalidad</strong>100% virtual via Google Meet</div>
+      </div>
+      <div class="info-l">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div><strong>Desde donde estés</strong>Lima, Latinoamérica, Estados Unidos y más</div>
+      </div>
+    </div>
+  </div>
+  <div class="btns-contacto">
+    <a href="https://wa.me/51918371211" class="btn-c btn-c-p" target="_blank">
+      <svg viewBox="0 0 24 24" style="fill:white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <div class="btn-c-txt"><strong>Escribir por WhatsApp</strong><span>+51 918 371 211</span></div>
+    </a>
+    <a href="https://instagram.com/espaciomashumano" class="btn-c" target="_blank">
+      <svg viewBox="0 0 24 24" style="fill:rgba(245,240,232,0.75)"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      <div class="btn-c-txt"><strong>Instagram</strong><span>@espaciomashumano</span></div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span class="ft-logo">Más Humano</span>
+  <span class="ft-firma">+humano 💚</span>
+  <div class="ft-ig"><a href="https://instagram.com/espaciomashumano" target="_blank">@espaciomashumano</a></div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     MODAL AVANI
+══════════════════════════════════════════ -->
+<div class="modal" id="modalAvani">
+  <button class="modal-cerrar" onclick="cerrarAvani()">✕</button>
+  <div class="progreso-avani">
+    <div class="pt activo" id="d1"></div><div class="pt" id="d2"></div>
+    <div class="pt" id="d3"></div><div class="pt" id="d4"></div><div class="pt" id="d5"></div>
+  </div>
+
+  <div class="screen-avani activa" id="av1">
+    <div class="modal-logo">Más Humano · Avani</div>
+    <div class="av-bienvenida">
+      <div class="av-pulso"></div>
+      <p class="av-nombre">Herramienta de presencia · Avani</p>
+      <h1 class="av-h1">Estás <em>aquí.</em><br>Eso es suficiente.</h1>
+      <p class="av-sub">Lo que sientes ahora mismo es real, y va a pasar.<br>Vamos paso a paso, sin apuro.</p>
+      <button class="btn-av" id="av-btn1">Estoy lista</button>
+    </div>
+  </div>
+
+  <div class="screen-avani" id="av2">
+    <div class="modal-logo">Más Humano · Avani</div>
+    <div class="av-resp">
+      <p class="txt-resp" id="txt-r">Toca para comenzar</p>
+      <div class="circulo-av" id="circulo-av"><span class="cont-num" id="num-r"></span></div>
+      <p class="ciclos-av" id="ciclos-av">Haremos 4 respiraciones juntas</p>
+      <button class="btn-av" id="av-btn2" style="display:none;margin-top:1rem">Continuar</button>
+    </div>
+  </div>
+
+  <div class="screen-avani" id="av3">
+    <div class="modal-logo">Más Humano · Avani</div>
+    <div class="av-anclaje">
+      <h2 class="av-h2">Vuelve a tu cuerpo</h2>
+      <p class="av-desc">Toca cada uno cuando lo hayas hecho.<br>No hay prisa.</p>
+      <ul class="sentidos">
+        <li class="s-item"><span class="s-num">5</span><div class="s-cont"><h3>Cosas que puedes ver</h3><p>Mira alrededor y nombra cinco. No tienen que ser importantes.</p></div><span class="s-check">✓</span></li>
+        <li class="s-item"><span class="s-num">4</span><div class="s-cont"><h3>Cosas que puedes tocar</h3><p>La ropa, el suelo, una superficie cerca. Siente la textura.</p></div><span class="s-check">✓</span></li>
+        <li class="s-item"><span class="s-num">3</span><div class="s-cont"><h3>Sonidos que puedes escuchar</h3><p>Cierra los ojos un momento. ¿Qué escuchas?</p></div><span class="s-check">✓</span></li>
+        <li class="s-item"><span class="s-num">2</span><div class="s-cont"><h3>Olores que puedes percibir</h3><p>Respira suave. ¿Hay algo en el aire?</p></div><span class="s-check">✓</span></li>
+        <li class="s-item"><span class="s-num">1</span><div class="s-cont"><h3>Algo que puedes saborear</h3><p>Tu boca, un trago de agua si tienes cerca.</p></div><span class="s-check">✓</span></li>
+      </ul>
+      <button class="btn-av" id="av-btn3" style="margin-top:1.5rem;opacity:0.35;pointer-events:none">Seguir</button>
+    </div>
+  </div>
+
+  <div class="screen-avani" id="av4">
+    <div class="modal-logo">Más Humano · Avani</div>
+    <div class="av-frase">
+      <div class="av-ornamento">"</div>
+      <p class="av-frase-grande">Noto que siento ansiedad.<br>No soy la ansiedad.</p>
+      <p class="av-frase-txt">Lo que estás sintiendo es una ola. Tiene inicio, tiene pico, y tiene fin.<br><br>Tu trabajo ahora no es que desaparezca. Es solo quedarte aquí, respirando, sin escapar.<br><br>Ya lo estás haciendo.</p>
+      <button class="btn-av" id="av-btn4">Estoy un poco mejor</button>
+    </div>
+  </div>
+
+  <div class="screen-avani" id="av5">
+    <div class="av-cierre">
+      <p class="av-final">Lo atravesaste.<br>Eso tiene valor.</p>
+      <p class="av-submsg">La ansiedad miente. Te dice que es para siempre, que no puedes, que algo malo va a pasar.<br><br>Pero acabas de demostrar que puedes estar con ella sin desaparecer.<br><br>Descansa. Toma agua. No tienes que hacer nada más ahora mismo.</p>
+      <div class="av-autoria">
+        <p class="av-marca-grande">+humano 💚</p>
+        <div class="av-sep"></div>
+        <p class="av-credit-label">Creado por</p>
+        <p class="av-credit-nombre">Roosvelt Cabrejos</p>
+        <p class="av-credit-para">para Más Humano</p>
+      </div>
+      <button class="btn-av-s" id="av-btn5">Repetir el ejercicio</button>
+      <div class="compartir-bloque">
+        <p>¿Le sirve a alguien que conoces? Compártelo.</p>
+        <div class="compartir-links">
+          <a href="https://wa.me/?text=Encontré+esta+herramienta+gratuita+de+Más+Humano+para+momentos+de+ansiedad" class="comp-link" target="_blank">WhatsApp</a>
+          <a href="https://instagram.com/espaciomashumano" class="comp-link" target="_blank">@espaciomashumano</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MODAL LÚMINA
+══════════════════════════════════════════ -->
+<div class="modal-lumina" id="modalLumina">
+  <button class="lm-cerrar" onclick="cerrarLumina()">✕</button>
+  <div class="lm-app">
+
+    <div class="lm-screen active" id="lm1">
+      <div class="lm-logo-bar">
+        <div class="lm-logo">+<span>humano</span></div>
+        <div class="lm-progress-bar">
+          <div class="lm-dot current"></div><div class="lm-dot"></div><div class="lm-dot"></div>
+          <div class="lm-dot"></div><div class="lm-dot"></div><div class="lm-dot"></div>
+        </div>
+      </div>
+      <div class="lm-content">
+        <div class="lm-eyebrow">Recursos · Más Humano</div>
+        <h1 class="lm-h1">Cuando la mente<br><em>no para.</em></h1>
+        <div class="lm-loop-visual" aria-hidden="true">
+          <div class="lm-ring lm-ring-1"></div>
+          <div class="lm-ring lm-ring-2"></div>
+          <div class="lm-ring lm-ring-3"></div>
+          <div class="lm-ring-center">el mismo<br>pensamiento<br>otra vez</div>
+        </div>
+        <p class="lm-lead">Si llegas a este espacio, probablemente conoces esa sensación: un pensamiento que regresa, que analiza, que busca respuestas, que vuelve a empezar. No estás eligiendo pensar en eso. Simplemente, tu mente no puede soltar.</p>
+        <div class="lm-divider"></div>
+        <p class="lm-lead" style="animation-delay:0.4s">Esto tiene un nombre. Y, más importante, tiene una salida. Este recurso no promete vaciar tu mente. Te ofrece algo mejor: aprender a relacionarte con ella de otra manera.</p>
+        <div class="lm-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Aproximadamente 10 minutos · Basado en Terapia de Aceptación y Compromiso (ACT)
+        </div>
+        <button class="lm-btn-primary" onclick="lmGoTo(2)">
+          Comenzar
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+        </button>
+        <div class="lm-spacer"></div>
+      </div>
+      <div class="lm-firma">Creado por <strong>Roosvelt Cabrejos</strong> para <strong>Más Humano</strong></div>
+    </div>
+
+    <div class="lm-screen" id="lm2">
+      <div class="lm-logo-bar">
+        <div class="lm-logo">+<span>humano</span></div>
+        <div class="lm-progress-bar">
+          <div class="lm-dot done"></div><div class="lm-dot current"></div><div class="lm-dot"></div>
+          <div class="lm-dot"></div><div class="lm-dot"></div><div class="lm-dot"></div>
+        </div>
+      </div>
+      <div class="lm-content">
+        <div class="lm-progress-line"><div class="lm-progress-fill" style="width:17%"></div></div>
+        <div class="lm-step"><div class="lm-step-num">I</div><div class="lm-step-label">Entender qué está pasando</div></div>
+        <h2 class="lm-h2">Tu mente no está<br><em>en tu contra.</em></h2>
+        <p class="lm-lead">La rumiación es el patrón mental de repasar repetidamente un problema, una situación dolorosa o una preocupación, sin llegar a ninguna solución. No es un defecto tuyo. Es un mecanismo que tu cerebro usa para intentar protegerte.</p>
+        <div class="lm-stat-row">
+          <div class="lm-stat-box"><div class="lm-stat-num">2×</div><div class="lm-stat-desc">Las mujeres rumian con el doble de frecuencia que los hombres, según investigación clínica sostenida</div></div>
+          <div class="lm-stat-box"><div class="lm-stat-num">73%</div><div class="lm-stat-desc">De los episodios depresivos en mujeres tienen la rumiación como factor desencadenante o mantenedor</div></div>
+        </div>
+        <div class="lm-quote">
+          <div class="lm-quote-text">"La mente busca resolver lo que siente como amenaza. El problema es que no distingue entre un peligro real y un pensamiento sobre ese peligro."</div>
+          <div class="lm-quote-attr">Susan Nolen-Hoeksema · Investigadora en psicología del género y rumiación</div>
+        </div>
+        <p class="lm-body">Cuando rumas, tu mente está trabajando. El problema es que está trabajando en círculos: el mismo análisis, las mismas preguntas, las mismas respuestas incompletas. Ese esfuerzo real no produce alivio, produce más tensión.</p>
+        <p class="lm-body">Lo que vas a aprender hoy no es a pensar menos. Es a no quedar atrapada en el pensamiento.</p>
+        <div class="lm-spacer"></div>
+      </div>
+      <div class="lm-bottom-nav">
+        <button class="lm-nav-back" onclick="lmGoTo(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></svg>Atrás</button>
+        <button class="lm-nav-continue" onclick="lmGoTo(3)">Continuar<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg></button>
+      </div>
+    </div>
+
+    <div class="lm-screen" id="lm3">
+      <div class="lm-logo-bar">
+        <div class="lm-logo">+<span>humano</span></div>
+        <div class="lm-progress-bar">
+          <div class="lm-dot done"></div><div class="lm-dot done"></div><div class="lm-dot current"></div>
+          <div class="lm-dot"></div><div class="lm-dot"></div><div class="lm-dot"></div>
+        </div>
+      </div>
+      <div class="lm-content">
+        <div class="lm-progress-line"><div class="lm-progress-fill" style="width:34%"></div></div>
+        <div class="lm-step"><div class="lm-step-num">II</div><div class="lm-step-label">Reconocer el patrón</div></div>
+        <h2 class="lm-h2">¿Con cuál de estas<br><em>te identificas?</em></h2>
+        <p class="lm-lead">La rumiación se disfraza de muchas formas. Elige las que sientas más cercanas a ti en este momento, o en general.</p>
+        <div class="lm-thoughts" id="lm-thoughts">
+          <div class="lm-thought" onclick="lmToggle(this)"><div class="lm-thought-dot"></div><div class="lm-thought-label">"Debería haber dicho algo diferente. ¿Por qué no lo vi antes?" (reproches sobre el pasado)</div></div>
+          <div class="lm-thought" onclick="lmToggle(this)"><div class="lm-thought-dot"></div><div class="lm-thought-label">"¿Y si no funciona? ¿Y si lo arruino todo?" (anticipación ansiosa del futuro)</div></div>
+          <div class="lm-thought" onclick="lmToggle(this)"><div class="lm-thought-dot"></div><div class="lm-thought-label">"¿Por qué me siento así si no debería sentirme así?" (análisis sobre las propias emociones)</div></div>
+          <div class="lm-thought" onclick="lmToggle(this)"><div class="lm-thought-dot"></div><div class="lm-thought-label">"No puedo dejar de darle vueltas, aunque sé que no sirve de nada." (conciencia del bucle, incapacidad de salir)</div></div>
+        </div>
+        <p id="lm-msg" class="lm-validation">Elige al menos una para continuar.</p>
+        <div class="lm-technique-box" style="margin-top:24px">
+          <div class="lm-technique-title">Lo que tienes que saber</div>
+          <div class="lm-technique-text">Ninguna de estas formas es "irracionalidad". Todas son intentos de tu mente por encontrar control sobre algo que siente como incierto o doloroso. Reconocerlas es el primer paso para no quedar capturada por ellas.</div>
+        </div>
+        <div class="lm-spacer"></div>
+      </div>
+      <div class="lm-bottom-nav">
+        <button class="lm-nav-back" onclick="lmGoTo(2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></svg>Atrás</button>
+        <button class="lm-nav-continue" onclick="lmValidate()">Continuar<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg></button>
+      </div>
+    </div>
+
+    <div class="lm-screen" id="lm4">
+      <div class="lm-logo-bar">
+        <div class="lm-logo">+<span>humano</span></div>
+        <div class="lm-progress-bar">
+          <div class="lm-dot done"></div><div class="lm-dot done"></div><div class="lm-dot done"></div>
+          <div class="lm-dot current"></div><div class="lm-dot"></div><div class="lm-dot"></div>
+        </div>
+      </div>
+      <div class="lm-content">
+        <div class="lm-progress-line"><div class="lm-progress-fill" style="width:51%"></div></div>
+        <div class="lm-step"><div class="lm-step-num">III</div><div class="lm-step-label">Técnica · Defusión cognitiva</div></div>
+        <div class="lm-badge">ACT · Terapia de Aceptación y Compromiso</div>
+        <h2 class="lm-h2">El pensamiento no es<br><em>un hecho.</em></h2>
+        <p class="lm-lead">La defusión cognitiva es una de las herramientas más poderosas de la psicología contemporánea para la rumiación. Su principio es simple: hay una diferencia entre <span class="lm-highlight">tener un pensamiento</span> y <span class="lm-highlight">ser ese pensamiento.</span></p>
+        <p class="lm-body">Cuando rumas, tu mente se fusiona con el pensamiento: lo trata como verdad absoluta, como identidad, como realidad. La defusión crea distancia. No para negar lo que piensas, sino para verlo desde otro lugar.</p>
+        <p class="lm-body" style="font-weight:500;color:#F5F0E8;font-size:14px">Practica este cambio de lenguaje:</p>
+        <div class="lm-transform">
+          <div class="lm-transform-row"><div class="lm-before">Soy un fracaso.</div><div class="lm-arrow">→</div><div class="lm-after">Estoy teniendo el pensamiento de que soy un fracaso.</div></div>
+          <div class="lm-transform-row"><div class="lm-before">No voy a poder con esto.</div><div class="lm-arrow">→</div><div class="lm-after">Mi mente me dice que no voy a poder con esto.</div></div>
+          <div class="lm-transform-row"><div class="lm-before">Todo siempre me sale mal.</div><div class="lm-arrow">→</div><div class="lm-after">Noto que aparece el pensamiento de que todo me sale mal.</div></div>
+        </div>
+        <div class="lm-technique-box">
+          <div class="lm-technique-title">¿Por qué funciona?</div>
+          <div class="lm-technique-text">Al cambiar el lenguaje, activas la corteza prefrontal y reduces la reactividad de la amígdala. Crear esa distancia, aunque parezca pequeña, interrumpe el bucle. El pensamiento sigue ahí, pero tú dejas de estar dentro de él.</div>
+        </div>
+        <div class="lm-spacer"></div>
+      </div>
+      <div class="lm-bottom-nav">
+        <button class="lm-nav-back" onclick="lmGoTo(3)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></svg>Atrás</button>
+        <button class="lm-nav-continue" onclick="lmGoTo(5)">Continuar<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg></button>
+      </div>
+    </div>
+
+    <div class="lm-screen" id="lm5">
+      <div class="lm-logo-bar">
+        <div class="lm-logo">+<span>humano</span></div>
+        <div class="lm-progress-bar">
+          <div class="lm-dot done"></div><div class="lm-dot done"></div><div class="lm-dot done"></div>
+          <div class="lm-dot done"></div><div class="lm-dot current"></div><div class="lm-dot"></div>
+        </div>
+      </div>
+      <div class="lm-content">
+        <div class="lm-progress-line"><div class="lm-progress-fill" style="width:68%"></div></div>
+        <div class="lm-step"><div class="lm-step-num">IV</div><div class="lm-step-label">Técnica · La pregunta del observador</div></div>
+        <div class="lm-badge">ACT · Perspectiva del yo como contexto</div>
+        <h2 class="lm-h2">Hay una parte de ti<br>que <em>siempre observa.</em></h2>
+        <p class="lm-lead">La Terapia de Aceptación y Compromiso distingue entre la mente que piensa (que rumia, que analiza, que juzga) y el yo observador: esa parte de ti que puede notar que estás pensando, sin perderse en el pensamiento.</p>
+        <p class="lm-body">Toca cada pregunta para acceder a una perspectiva que probablemente ya está en ti, pero que la rumiación no te deja escuchar.</p>
+        <div class="lm-obs-hint">Toca para revelar</div>
+        <div class="lm-obs-list">
+          <div class="lm-obs-card" onclick="lmReveal(this)">
+            <div class="lm-obs-q">"¿Qué le diría a una amiga que está pensando exactamente lo mismo que yo?"</div>
+            <div class="lm-obs-a">Cuando salimos del foco de "yo" y hablamos desde la compasión hacia otra persona, accedemos a una sabiduría que la autocrítica bloquea. Lo que le dirías a ella con amabilidad, también te lo puedes decir a ti.</div>
+          </div>
+          <div class="lm-obs-card" onclick="lmReveal(this)">
+            <div class="lm-obs-q">"¿Este pensamiento me está ayudando a resolver algo, o solo me está haciendo sufrir?"</div>
+            <div class="lm-obs-a">La rumiación se siente como "trabajar en el problema", pero en realidad rara vez produce soluciones. Si el pensamiento no te lleva a ninguna acción concreta y útil, es un bucle, no un análisis. Puedes dejarlo pasar.</div>
+          </div>
+          <div class="lm-obs-card" onclick="lmReveal(this)">
+            <div class="lm-obs-q">"¿Qué estaría haciendo ahora mismo si no estuviera atrapada en este pensamiento?"</div>
+            <div class="lm-obs-a">Esta pregunta no minimiza lo que sientes. Te recuerda que existe un presente, que hay un cuerpo tuyo en un lugar, con posibilidades reales. A veces regresar a esa imagen concreta es suficiente para interrumpir el bucle por un momento.</div>
+          </div>
+        </div>
+        <div class="lm-field-group" style="margin-top:16px">
+          <div class="lm-field-label">Espacio libre · Escribe lo que está en tu mente ahora mismo</div>
+          <textarea class="lm-textarea" rows="4" placeholder="No hay respuesta correcta. Escribe como si nadie fuera a leerlo."></textarea>
+          <p class="lm-body" style="font-size:13px;margin-top:-4px">Poner el pensamiento en palabras escritas lo externaliza. Lo saca de la mente y lo convierte en algo que puedes ver desde afuera. No tienes que guardarlo. Solo escríbelo.</p>
+        </div>
+        <div class="lm-spacer"></div>
+      </div>
+      <div class="lm-bottom-nav">
+        <button class="lm-nav-back" onclick="lmGoTo(4)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12,19 5,12 12,5"/></svg>Atrás</button>
+        <button class="lm-nav-continue" onclick="lmGoTo(6)">Continuar<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg></button>
+      </div>
+    </div>
+
+    <div class="lm-screen" id="lm6">
+      <div class="lm-logo-bar">
+        <div class="lm-logo">+<span>humano</span></div>
+        <div class="lm-progress-bar">
+          <div class="lm-dot done"></div><div class="lm-dot done"></div><div class="lm-dot done"></div>
+          <div class="lm-dot done"></div><div class="lm-dot done"></div><div class="lm-dot current"></div>
+        </div>
+      </div>
+      <div class="lm-content">
+        <div class="lm-progress-line"><div class="lm-progress-fill" style="width:100%"></div></div>
+        <div class="lm-eyebrow" style="margin-top:8px">Completaste el recorrido</div>
+        <h2 class="lm-h2">Estuviste aquí.<br><em>Eso ya importa.</em></h2>
+        <p class="lm-lead">No hace falta que tu mente haya quedado en silencio. Hace falta que hayas creado, aunque sea por unos minutos, una relación diferente con lo que piensas.</p>
+        <ul class="lm-check-list">
+          <li><svg class="lm-check-icon" viewBox="0 0 24 24" fill="none" stroke="#7FAF8C" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="8,12 11,15 16,9"/></svg>Entendiste qué es la rumiación y por qué ocurre en ti, no como falla, sino como mecanismo.</li>
+          <li><svg class="lm-check-icon" viewBox="0 0 24 24" fill="none" stroke="#7FAF8C" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="8,12 11,15 16,9"/></svg>Practicaste defusión cognitiva: el pensamiento no es un hecho, y tú no eres tu pensamiento.</li>
+          <li><svg class="lm-check-icon" viewBox="0 0 24 24" fill="none" stroke="#7FAF8C" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="8,12 11,15 16,9"/></svg>Accediste a la perspectiva del observador: esa parte de ti que ve sin perderse.</li>
+          <li><svg class="lm-check-icon" viewBox="0 0 24 24" fill="none" stroke="#7FAF8C" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="8,12 11,15 16,9"/></svg>Exteriorizaste lo que tenías dentro. Eso interrumpe el bucle.</li>
+        </ul>
+        <div class="lm-cierre-card">
+          <div class="lm-cierre-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#7FAF8C" fill="none" stroke-width="1.5"/></svg></div>
+          <div class="lm-cierre-title">Si esto resonó contigo</div>
+          <div class="lm-cierre-text">La rumiación que aparece una vez puede ser una señal. La que aparece cada noche, o cada vez que algo se mueve, merece atención real. En Más Humano trabajamos exactamente esto, desde adentro, a tu ritmo.</div>
+          <a class="lm-btn-cta" href="https://wa.me/51918371211" target="_blank" rel="noopener">
+            Escribir a Más Humano
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+          </a>
+        </div>
+        <p class="lm-body" style="text-align:center;font-size:13px;margin-top:8px">Comparte este recurso con alguien que lo necesite.</p>
+        <div class="lm-spacer"></div>
+      </div>
+      <div class="lm-firma">Creado por <strong>Roosvelt Cabrejos</strong> para <strong>Más Humano</strong> · +humano 💚</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ── AVANI ── */
+let pantActual=1,respirando=false,ciclos=0,totalC=4,timerR=null,marcados=0;
+function abrirAvani(){document.getElementById('modalAvani').classList.add('abierto');document.body.style.overflow='hidden';resetAvani()}
+function cerrarAvani(){document.getElementById('modalAvani').classList.remove('abierto');document.body.style.overflow='';if(timerR)clearTimeout(timerR);respirando=false}
+function irAv(n){document.getElementById('av'+pantActual).classList.remove('activa');document.getElementById('d'+pantActual).classList.remove('activo');pantActual=n;document.getElementById('av'+n).classList.add('activa');document.getElementById('d'+n).classList.add('activo');if(n===2)resetResp()}
+function resetAvani(){if(timerR)clearTimeout(timerR);respirando=false;marcados=0;ciclos=0;[1,2,3,4,5].forEach(i=>{document.getElementById('av'+i).classList.remove('activa');document.getElementById('d'+i).classList.remove('activo')});document.getElementById('av1').classList.add('activa');document.getElementById('d1').classList.add('activo');pantActual=1;document.querySelectorAll('.s-item').forEach(i=>i.classList.remove('ok'));document.getElementById('av-btn3').style.opacity='0.35';document.getElementById('av-btn3').style.pointerEvents='none'}
+function resetResp(){respirando=false;ciclos=0;if(timerR)clearTimeout(timerR);document.getElementById('txt-r').textContent='Toca para comenzar';document.getElementById('num-r').textContent='';document.getElementById('circulo-av').className='circulo-av';document.getElementById('ciclos-av').textContent='Haremos 4 respiraciones juntas';document.getElementById('av-btn2').style.display='none'}
+function iniciarResp(){if(respirando)return;respirando=true;ciclos=0;fase('inhala')}
+function fase(f){if(!respirando)return;const c=document.getElementById('circulo-av'),t=document.getElementById('txt-r'),n=document.getElementById('num-r'),ct=document.getElementById('ciclos-av');let dur;if(f==='inhala'){dur=4;t.textContent='Inhala suavemente';c.className='circulo-av expand'}else if(f==='sostén'){dur=4;t.textContent='Sostén';c.className='circulo-av'}else{dur=6;t.textContent='Exhala despacio';c.className='circulo-av contrae'}let cd=dur;n.textContent=cd;const iv=setInterval(()=>{cd--;n.textContent=cd>0?cd:'';if(cd<=0){clearInterval(iv);if(f==='inhala'){timerR=setTimeout(()=>fase('sostén'),600)}else if(f==='sostén'){timerR=setTimeout(()=>fase('exhala'),600)}else{ciclos++;const r=totalC-ciclos;if(r>0){ct.textContent=r===1?'Una más':`${r} respiraciones más`;timerR=setTimeout(()=>fase('inhala'),600)}else{t.textContent='Muy bien';n.textContent='';c.className='circulo-av';ct.textContent='Has respirado bien';document.getElementById('av-btn2').style.display='inline-block';respirando=false}}}},1000)}
+function marcar(el){if(!el.classList.contains('ok')){el.classList.add('ok');marcados++;if(marcados>=5){document.getElementById('av-btn3').style.opacity='1';document.getElementById('av-btn3').style.pointerEvents='auto'}}}
+function bind(id,fn){const el=document.getElementById(id);if(!el)return;el.addEventListener('click',fn);el.addEventListener('touchend',e=>{e.preventDefault();fn()})}
+bind('av-btn1',()=>irAv(2));bind('av-btn2',()=>irAv(3));bind('av-btn3',()=>irAv(4));bind('av-btn4',()=>irAv(5));
+bind('av-btn5',()=>{marcados=0;ciclos=0;document.querySelectorAll('.s-item').forEach(i=>i.classList.remove('ok'));document.getElementById('av-btn3').style.opacity='0.35';document.getElementById('av-btn3').style.pointerEvents='none';irAv(1)});
+const cir=document.getElementById('circulo-av');
+cir.addEventListener('click',iniciarResp);
+cir.addEventListener('touchend',e=>{e.preventDefault();iniciarResp()});
+document.querySelectorAll('.s-item').forEach(item=>{item.addEventListener('click',()=>marcar(item));item.addEventListener('touchend',e=>{e.preventDefault();marcar(item)})});
+
+/* ── LÚMINA ── */
+let lmCurrent=1;
+function abrirLumina(){document.getElementById('modalLumina').classList.add('abierto');document.body.style.overflow='hidden';lmReset()}
+function cerrarLumina(){document.getElementById('modalLumina').classList.remove('abierto');document.body.style.overflow=''}
+function lmGoTo(n){document.getElementById('lm'+lmCurrent).classList.remove('active');document.getElementById('lm'+n).classList.add('active');lmCurrent=n;window.scrollTo({top:0,behavior:'smooth'})}
+function lmReset(){[1,2,3,4,5,6].forEach(i=>document.getElementById('lm'+i).classList.remove('active'));document.getElementById('lm1').classList.add('active');lmCurrent=1;document.querySelectorAll('.lm-thought').forEach(t=>t.classList.remove('selected'));document.querySelectorAll('.lm-obs-card').forEach(c=>c.classList.remove('revealed'))}
+function lmToggle(el){el.classList.toggle('selected');document.getElementById('lm-msg').classList.remove('show')}
+function lmValidate(){const sel=document.querySelectorAll('#lm-thoughts .lm-thought.selected');if(sel.length===0){document.getElementById('lm-msg').classList.add('show');return}lmGoTo(4)}
+function lmReveal(el){el.classList.toggle('revealed')}
+</script>
+</body>
+</html>
